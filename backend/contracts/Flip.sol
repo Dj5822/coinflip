@@ -6,7 +6,7 @@ contract Flip {
 
     bool private randomise;
     uint256 private flipCount;  
-    address tokenAddress;
+    address private tokenAddress;
 
     // flipstate mapping (0 == new address, 1 == odd flips, 2 == even flips).
     mapping(address => uint8) private flipstate;
@@ -85,7 +85,11 @@ contract Flip {
     }
 
     // Get the current flip state for a given address
-    function getFlipCount(address _addr) public view returns (uint256) {
+    function getFlipState(address _addr) public view returns (uint256) {
         return flipstate[_addr];
+    }
+
+    function getInternalState() public view returns (bool, address, uint256, uint256 ){
+        return(randomise, tokenAddress, flipCount, addresscount);
     }
 }
