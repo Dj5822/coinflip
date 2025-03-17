@@ -25,7 +25,6 @@ contract Flip {
     // flipCoin() uses a flip strategy to determine whether to send a prize or not.
     // There are 2 strategies: alternating flips and randmomised flips.
     function flipCoin() public {
-        require(address(this).balance >= 1 ether, "Fund too low");
 
         // switch on type of flip
         if (randomise == true){
@@ -77,6 +76,7 @@ contract Flip {
 
     function sendPrize() private {
         require (tokenAddress ==address(0),"ERC20 Tokens not supported yet");
+        require(address(this).balance >= 1 ether, "Insufficient funds");
         //Send 0.01 ETH using the ugly but safe method.
         (bool sent, bytes memory data) = msg.sender.call{
            value: 10000000000000000
