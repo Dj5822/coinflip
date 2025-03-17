@@ -14,7 +14,7 @@ contract Flip {
     uint256 private addresscount; 
 
     // Log successful flips
-    event flip(address, uint8); 
+    event flip(address, bool); 
 
         constructor(bool _rand, address _token) {
         
@@ -47,7 +47,7 @@ contract Flip {
         }
 
         // Log the flip
-        emit flip(msg.sender, flipstate[msg.sender]);
+        emit flip(msg.sender, flipstate[msg.sender]==2);
 
         // Update the flip state
         if (++flipstate[msg.sender] == 3){
@@ -63,10 +63,16 @@ contract Flip {
     // flipRandom() generates a best-effort front-run resistant random number.
     // Sends a prise if it is even.  
     function flipRandom() private {
+
+        // Generate random number
+        uint rand = uint(keccak256(abi.encodePacked(msg.sender, flipCount, blockhash(block.number),block.gaslimit, block.prevrandao, block.timestamp)));
+
+        bool win = (rand % 2 == 0); // The user has won if the hash is even
       
-        if (uint(keccak256(abi.encodePacked(msg.sender, flipCount, blockhash(block.number),block.gaslimit, block.prevrandao, block.timestamp))) % 2 == 0){
-            sendPrize();
-        }
+        if (win) { sendPrize();}
+    
+        // Log the flip
+        emit flip(msg.sender, win);
     }
 
     function sendPrize() private {
