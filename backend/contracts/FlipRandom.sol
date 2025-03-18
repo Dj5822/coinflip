@@ -12,15 +12,15 @@ The prize is 0.01 ETH and the contract balance cannot fall below 1 ETH.
 contract FlipRandom {
     // Event to log whether a flip has resulted in a prize
     event flip(address, bool); 
-        constructor() {
+        constructor() payable {
     }
 
     // flipCoin() generates a best-effort front-run resistant random number.
     // Sends a prise if it is even.  
-    function flipCoin() private returns (bool){
+    function flipCoin() public returns (bool){
         require(address(this).balance >= 1 ether, "Fund too low");
         // Generate a random number
-        uint rand = uint(keccak256(abi.encodePacked(msg.sender, blockhash(block.number),block.gaslimit, block.prevrandao, block.timestamp)));
+        uint rand = uint(keccak256(abi.encodePacked(msg.sender, blockhash(block.number),msg.sender.balance, block.prevrandao, block.timestamp)));
         bool win = (rand % 2 == 0); // The user has won if the random number is even
         if (win) { 
             sendPrize();
