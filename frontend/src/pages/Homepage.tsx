@@ -1,7 +1,23 @@
-import { Button, Stack, Typography, useTheme } from "@mui/material";
+import { Button, Stack, Typography } from "@mui/material";
+import { useState } from "react";
+import { ethers } from "ethers";
 
 const Homepage = () => {
-  const theme = useTheme();
+  const [connected, setConnected] = useState(false);
+  const [walletAddress, setWalletAddress] = useState("");
+
+  const connectWallet = async () => {
+    if (window.ethereum) {
+      if (!connected) {
+        // Connect the wallet using ethers.js
+        const provider = new ethers.BrowserProvider(window.ethereum);
+        const signer = await provider.getSigner();
+        const _walletAddress = await signer.getAddress();
+        setConnected(true);
+        setWalletAddress(_walletAddress);
+      }
+    }
+  };
 
   return (
     <Stack
@@ -21,7 +37,13 @@ const Homepage = () => {
       >
         Replace with image of coin
       </Typography>
-      <Button variant="contained">Select Wallet</Button>
+      {connected ? (
+        <Typography>Connected to {walletAddress}</Typography>
+      ) : (
+        <Button variant="contained" onClick={connectWallet}>
+          Connect Wallet
+        </Button>
+      )}
     </Stack>
   );
 };
