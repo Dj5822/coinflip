@@ -5,6 +5,13 @@ import { BrowserRouter, Route, Routes } from "react-router";
 import "./index.css";
 import theme from "./theme.ts";
 import Homepage from "./pages/Homepage.tsx";
+import { MetaMaskInpageProvider } from "@metamask/providers";
+
+declare global {
+  interface Window {
+    ethereum?: MetaMaskInpageProvider;
+  }
+}
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
